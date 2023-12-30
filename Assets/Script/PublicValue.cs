@@ -5,13 +5,9 @@ using UnityEngine;
 public class PublicValue : MonoBehaviour
 {
     // Start is called before the first frame update
-    public int Hp;
+    public static int Hp;
     public GameObject HpBar;
-    void Start()
-    {
-        Hp = 6;
-    }
-
+    
     // Update is called once per frame
     void Update()
     {
