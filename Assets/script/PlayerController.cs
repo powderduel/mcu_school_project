@@ -37,6 +37,8 @@ public class PlayerController : MonoBehaviour
     private bool isJumping;
     private bool canWalkOnSlope;
     private bool canJump;
+    private bool isWalking;
+    private bool isAttack;
 
     private Vector2 newVelocity;
     private Vector2 newForce;
@@ -52,13 +54,13 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<CapsuleCollider2D>();
         anim = GetComponent<Animator>();
-
         capsuleColliderSize = cc.size;
     }
 
     private void Update()
     {
-        CheckInput();     
+        CheckInput();
+        changAnimator();     
     }
 
     private void FixedUpdate()
@@ -66,13 +68,40 @@ public class PlayerController : MonoBehaviour
         CheckGround();
         SlopeCheck();
         ApplyMovement();
-        changAnimator();
+
 
     }
     private void changAnimator()
     {
+        if(xInput ==1 || xInput == -1)
+        {
+            anim.SetBool("isWalking", true);
+        }
+        else
+        {
+            anim.SetBool("isWalking", false);
+        }
+        if(isJumping)
+        {
+            anim.SetBool("isJumping", true);
+        }
+        else
+        {
+            anim.SetBool("isJumping", false);
+        }
 
-
+        if(Input.GetButtonDown("Fire1"))
+        {
+            anim.SetBool("isAttack", true);
+        }
+        else
+        {
+            anim.SetBool("isAttack", false);
+        }
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            anim.SetTrigger("Death");
+        }
     }
 
     private void CheckInput()
@@ -93,6 +122,7 @@ public class PlayerController : MonoBehaviour
         {
             Jump();
         }
+        
 
     }
     private void CheckGround()
@@ -204,7 +234,6 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded && !isOnSlope && !isJumping) //if not on slope
         {
-            Debug.Log("This one");
             newVelocity.Set(movementSpeed * xInput, 0.0f);
             rb.velocity = newVelocity;
         }
