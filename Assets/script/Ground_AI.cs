@@ -23,18 +23,24 @@ public class Ground_AI : MonoBehaviour
     }
     void Update()
     {
+                if(EnemyHP<=0)
+        {
+            Dead();
+        }
         // 檢查玩家是否在檢測範Q圍內
         if (PlayerInRange() && Time.time >= nextAttackTime)
         {
-            animator.SetBool("Run", true);
             // 如果玩家在檢測範圍內，則移動敵人朝向玩家
             MoveTowardsPlayer();
         }
-        else
-        {
-            animator.SetBool("Run", false);
-        }
+        Debug.Log("EnemyHP: "+EnemyHP);
         sprite.flipX = player.position.x > transform.position.x ? true : false;
+
+
+
+    }
+    void FixedUpdate()
+    {
 
     }
     /*void OnTriggerEnter2D(Collider2D other)
@@ -87,12 +93,10 @@ public class Ground_AI : MonoBehaviour
         // 敵人對玩家造成的傷害處理
 
         Debug.Log("Enemy damaged player!");
-        // player.GetComponent<PlayerHealth>().TakeDamage(damageAmount);
+        player.GetComponent<Health>().TakeDamage();
     }
     void BackwardJump()
     {
-        Debug.Log("Enemy damaged player!");
-        // 获取玩家的位置
         Vector3 playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
 
         // 计算反方向跳的方向
@@ -107,20 +111,17 @@ public class Ground_AI : MonoBehaviour
     void Dead() 
     {
 
-        animator.SetBool("Dead", true);
-        Destroy(this.gameObject,2f);
+        Destroy(this.gameObject,0.2f);
         
     }
 
-    void been_attacked(int Player_Damage)
+    public void been_attacked(int Player_Damage)
     {
+        Debug.Log("Enemy damaged!"+Player_Damage);
         BackwardJump();
 
         EnemyHP -= Player_Damage;
 
-        if (EnemyHP <= 0)
-        {
-            Dead();
-        }
+
     }
 }

@@ -23,6 +23,16 @@ public class PlayerController : MonoBehaviour
     private PhysicsMaterial2D noFriction;
     [SerializeField]
     private PhysicsMaterial2D fullFriction;
+    [SerializeField]
+    private float  dashingVelocity=14f;
+    [SerializeField]
+    private float  dashingTime=1f;
+    [SerializeField]
+    private SpriteRenderer sprite;
+
+    private Vector2 dashingDirection;
+    
+
 
     private float xInput;
     private float slopeDownAngle;
@@ -39,6 +49,8 @@ public class PlayerController : MonoBehaviour
     private bool canJump;
     private bool isWalking;
     private bool isAttack;
+    public bool isDashing;
+    private bool canDash=true;
 
     private Vector2 newVelocity;
     private Vector2 newForce;
@@ -48,19 +60,25 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private CapsuleCollider2D cc;
+    public Transform attackPoint;
+    public LayerMask enemyLayers;
+    public float attackRange = 0.5f;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<CapsuleCollider2D>();
         anim = GetComponent<Animator>();
+        sprite = GetComponent<SpriteRenderer>();
         capsuleColliderSize = cc.size;
     }
 
     private void Update()
     {
         CheckInput();
-        changAnimator();     
+        changAnimator();
+        CheckDashing();
+
     }
 
     private void FixedUpdate()
@@ -68,8 +86,22 @@ public class PlayerController : MonoBehaviour
         CheckGround();
         SlopeCheck();
         ApplyMovement();
+        trail();
 
 
+    }
+    private void trail()
+    {
+        if(isDashing==true&&isGrounded==false)
+        {
+		GameObject go = new GameObject("New Sprite");
+        go.transform.position = transform.position;
+        go.transform.rotation = transform.rotation;
+		SpriteRenderer renderer = go.AddComponent<SpriteRenderer>();
+        go.AddComponent<SelfDelete>();
+		renderer.sprite = sprite.sprite;
+        renderer.sortingLayerName = "4-player";
+        }
     }
     private void changAnimator()
     {
@@ -81,17 +113,11 @@ public class PlayerController : MonoBehaviour
         {
             anim.SetBool("isWalking", false);
         }
-        if(isJumping)
-        {
-            anim.SetBool("isJumping", true);
-        }
-        else
-        {
-            anim.SetBool("isJumping", false);
-        }
-
+        anim.SetBool("isJumping", isJumping);
+        anim.SetBool("isGrounded", isGrounded);
         if(Input.GetButtonDown("Fire1"))
         {
+            attack();
             anim.SetBool("isAttack", true);
         }
         else
@@ -122,8 +148,46 @@ public class PlayerController : MonoBehaviour
         {
             Jump();
         }
-        
 
+        if(Input.GetButtonDown("Dash")&&canDash)
+        {
+            Dash();
+            Debug.Log("Dash");
+        }
+
+
+
+    }
+    private void attack()
+    {
+        Collider2D[] hitEnemies=Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+        foreach(Collider2D enemy in hitEnemies)
+        {
+            StartCoroutine(delay(enemy));
+            Debug.Log("hit"+enemy.name);
+            
+
+        }
+    }
+    IEnumerator delay(Collider2D enemy){
+        yield return new WaitForSeconds(0.1f);
+        enemy.GetComponent<Ground_AI>().been_attacked(Status.attack);
+    }
+    private void OnDrawGizmosSelected()
+    {
+        if(attackPoint==null)
+        {
+            return;
+        }
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
+    private void CheckDashing()
+    {
+        if(!isDashing)
+        {
+            canDash = true;
+        }
+        anim.SetBool("isDashing", isDashing);
     }
     private void CheckGround()
     {
@@ -232,12 +296,12 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyMovement()
     {
-        if (isGrounded && !isOnSlope && !isJumping) //if not on slope
+        if (isGrounded && !isOnSlope && !isJumping) 
         {
             newVelocity.Set(movementSpeed * xInput, 0.0f);
             rb.velocity = newVelocity;
         }
-        else if (isGrounded && isOnSlope && canWalkOnSlope && !isJumping) //If on slope
+        else if (isGrounded && isOnSlope && canWalkOnSlope && !isJumping)
         {
             newVelocity.Set(movementSpeed * slopeNormalPerp.x * -xInput, movementSpeed * slopeNormalPerp.y * -xInput);
             rb.velocity = newVelocity;
@@ -260,5 +324,30 @@ public class PlayerController : MonoBehaviour
     {
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
+    private void Dash()
+    {
+        isDashing = true;
+        canDash = false;
+        dashingDirection= new Vector2(xInput,Input.GetAxisRaw("Vertical"));
+        if(dashingDirection==Vector2.zero)
+        {
+            dashingDirection = new Vector2(transform.localScale.x, 0f);
+        }
+        StartCoroutine(stopDashing());
+        
+        if(isDashing)
+        {
+            rb.velocity = dashingDirection * dashingVelocity;
+            return;
+        }
+
+    }
+    private IEnumerator stopDashing()
+    {
+        yield return new WaitForSeconds(dashingTime);
+        isDashing = false;
+
+    }
+
 
 }

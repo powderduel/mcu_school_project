@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 3046916586776393280}
   - component: {fileID: 3046916586776393281}
   - component: {fileID: 3046916586776393286}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Slime
-  m_TagString: Untagged
+  m_TagString: Enemies
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -74,8 +74,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -666298511
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 15dc4eb01dbeea343b3b8dfcdeb10bb6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -108,7 +108,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &3046916586776393280
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -147,15 +147,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb30d49f8b7b6c04fa05ea1f98e0340c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 3
+  moveSpeed: 1
   detectionRange: 12
-  player: {fileID: 0}
+  player: {fileID: 1322480527204871295, guid: 8f151452713f4bd4ab0607253e9d0988, type: 3}
   animator: {fileID: 3046916586776393286}
   damageAmount: 10
   cooldownTime: 2
   backwardJumpForce: 3
   upwardForce: 3
-  EnemyHP: 0
+  EnemyHP: 3
 --- !u!95 &3046916586776393286
 Animator:
   serializedVersion: 4
