@@ -108,7 +108,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &832714203825822904
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -151,11 +151,11 @@ MonoBehaviour:
   detectionRange: 12
   player: {fileID: 1322480527204871295, guid: 8f151452713f4bd4ab0607253e9d0988, type: 3}
   animator: {fileID: 832714203825822910}
-  damageAmount: 10
+  damageAmount: 1
   cooldownTime: 2
   backwardJumpForce: 3
   upwardForce: 3
-  EnemyHP: 0
+  EnemyHP: 3
 --- !u!95 &832714203825822910
 Animator:
   serializedVersion: 4

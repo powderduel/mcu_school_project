@@ -8,7 +8,7 @@ public class Health :MonoBehaviour
     
     [SerializeField]
     private Image[] health;
-    private int PlayerHealth = Status.PlayerHealth;
+    public int PlayerHealth = Status.PlayerHealth;
     private int attack = Status.attack;
     // Start is called before the first frame update
     private void Start()
@@ -37,6 +37,5 @@ public class Health :MonoBehaviour
     }
     public void TakeDamage(){
         PlayerHealth --;
-        Status.PlayerHealth = PlayerHealth;
     }
 }

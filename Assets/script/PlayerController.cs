@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private PhysicsMaterial2D fullFriction;
     [SerializeField]
-    private float  dashingVelocity=14f;
+    private float  dashingVelocity;
     [SerializeField]
     private float  dashingTime=1f;
     [SerializeField]
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
     private bool isWalking;
     private bool isAttack;
     public bool isDashing;
+    public bool isdead=false;
     private bool canDash=true;
 
     private Vector2 newVelocity;
@@ -83,11 +85,11 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Dead();
         CheckGround();
         SlopeCheck();
         ApplyMovement();
         trail();
-
 
     }
     private void trail()
@@ -132,7 +134,13 @@ public class PlayerController : MonoBehaviour
 
     private void CheckInput()
     {
+
+        if(isdead==true)
+        {
+            return;
+        }
         xInput = Input.GetAxisRaw("Horizontal");
+
 
         if (xInput == 1 && facingDirection == -1)
         {
@@ -346,6 +354,22 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(dashingTime);
         isDashing = false;
+
+    }
+    private void Dead()
+    {
+        if(Status.PlayerHealth<=0){
+            isdead=true;
+            anim.SetTrigger("Death");
+            rb.velocity = Vector2.zero;
+            StartCoroutine(respawntimer());
+            
+        }
+    }
+        private IEnumerator respawntimer()
+    {
+        yield return new WaitForSeconds(2f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
     }
 

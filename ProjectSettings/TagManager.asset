@@ -54,3 +54,6 @@ TagManager:
   - name: 4-player
     uniqueID: 864907081
     locked: 0
+  - name: 5-Death
+    uniqueID: 1040192857
+    locked: 0

@@ -66,7 +66,6 @@ public class Ground_AI : MonoBehaviour
             Debug.Log("Player collided with an enemy!");
             DealDamage(other.gameObject);
             BackwardJump();
-            EnemyHP -= 2;
             // 設定下一次能造成傷害的時間
             nextAttackTime = Time.time + cooldownTime;
         }
@@ -106,8 +105,8 @@ public class Ground_AI : MonoBehaviour
         rb.velocity = new Vector2(jumpDirection.x * backwardJumpForce, jumpDirection.y * backwardJumpForce);
         rb.velocity += new Vector2(0, upwardForce);
         // 防止穿透地图，使用射线检测地面
-        
     }
+    
     void Dead() 
     {
 

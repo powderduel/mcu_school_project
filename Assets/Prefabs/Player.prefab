@@ -203,7 +203,7 @@ MonoBehaviour:
     m_Bits: 64
   noFriction: {fileID: 6200000, guid: a4bdca4b67f40e44b92cd2769f40204e, type: 2}
   fullFriction: {fileID: 6200000, guid: fafd4a3d7955c2f4f913bd7db1e32678, type: 2}
-  dashingVelocity: 14
+  dashingVelocity: 25
   dashingTime: 1
   sprite: {fileID: 1322480527204871232}
   isDashing: 0
